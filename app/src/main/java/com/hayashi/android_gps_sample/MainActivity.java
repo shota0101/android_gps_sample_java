@@ -1,10 +1,15 @@
 package com.hayashi.android_gps_sample;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -50,6 +55,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void requestPermissionIfNot(Activity activity) {
+        // Fine か Coarseのいずれかのパーミッションが得られているかチェックする
+        // 本来なら、Android6.0以上かそうでないかで実装を分ける必要がある
+        if (ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            /** fine location のリクエストコード（値は他のパーミッションと被らなければ、なんでも良い）*/
+            final int requestCode = 1;
+
+            // いずれも得られていない場合はパーミッションのリクエストを要求する
+            ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, requestCode );
+            return;
+        }
     }
 
     // ロケーションプロバイダが利用可能になるとコールバックされるメソッド
