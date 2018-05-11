@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         .setAction("Action", null).show();
             }
         });
+
+        init();
     }
 
     @Override
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void init() {
+        requestPermissionIfNot(this);
     }
 
     public static void requestPermissionIfNot(Activity activity) {
