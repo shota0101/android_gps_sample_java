@@ -1,5 +1,7 @@
 package com.hayashi.android_gps_sample;
 
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,7 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,5 +50,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // ロケーションプロバイダが利用可能になるとコールバックされるメソッド
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    // 位置情報が通知されるたびにコールバックされるメソッド
+    @Override
+    public void onLocationChanged(Location location){
+    }
+
+    // ロケーションステータスが変わるとコールバックされるメソッド
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    //ロケーションプロバイダが利用不可能になるとコールバックされるメソッド
+    @Override
+    public void onProviderDisabled(String provider) {
     }
 }
