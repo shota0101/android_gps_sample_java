@@ -71,6 +71,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         // 位置情報を管理している LocationManager のインスタンスを生成
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         this.locationProvider = getLocationProvider(this, this.locationManager);
+        requestLocationUpdates(this, this.locationManager, this.locationProvider);
+    }
+
+    private static void requestLocationUpdates(LocationListener locationListener, LocationManager locationManager, String locationProvider) {
+        // 位置情報の通知するための最小時間間隔（ミリ秒）
+        final long minTime = 500;
+        // 位置情報を通知するための最小距離間隔（メートル）
+        final long minDistance = 1;
+
+        // 利用可能なロケーションプロバイダによる位置情報の取得の開始
+        // FIXME 本来であれば、リスナが複数回登録されないようにチェックする必要がある
+        try{
+            locationManager.requestLocationUpdates(locationProvider, minTime, minDistance, locationListener);
+        }catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String getLocationProvider(Activity activity, LocationManager locationManager) {
