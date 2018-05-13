@@ -66,15 +66,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public static void requestPermissionIfNot(Activity activity) {
         // Fine か Coarseのいずれかのパーミッションが得られているかチェックする
         // 本来なら、Android6.0以上かそうでないかで実装を分ける必要がある
-        if (ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Boolean isFineGranted =
+                ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+        Boolean isCoarseGranted =
+                ActivityCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
 
-            /** fine location のリクエストコード（値は他のパーミッションと被らなければ、なんでも良い）*/
+        if (!isFineGranted && !isCoarseGranted) {
+            // fine location のリクエストコード（値は他のパーミッションと被らなければ、なんでも良い）
             final int requestCode = 1;
-
             // いずれも得られていない場合はパーミッションのリクエストを要求する
-            ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, requestCode );
-            return;
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[] {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    requestCode );
         }
     }
 
