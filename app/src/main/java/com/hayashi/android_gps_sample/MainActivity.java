@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         return super.onOptionsItemSelected(item);
     }
 
-    public void init() {
+    private void init() {
         requestPermissionIfNot(this);
 
         // 位置情報を管理している LocationManager のインスタンスを生成
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         requestLocationUpdates(this, this.locationManager, this.locationProvider);
 
         Location location = getLocation(locationManager, locationProvider);
+        if (location != null) {
+            TextView textView = findViewById(R.id.textResult);
+            textView.setText(String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+        }
     }
 
     private static Location getLocation(LocationManager locationManager, String locationProvider) {
