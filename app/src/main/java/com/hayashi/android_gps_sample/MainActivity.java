@@ -72,6 +72,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         this.locationProvider = getLocationProvider(this, this.locationManager);
         requestLocationUpdates(this, this.locationManager, this.locationProvider);
+
+        Location location = getLocation(locationManager, locationProvider);
+    }
+
+    private static Location getLocation(LocationManager locationManager, String locationProvider) {
+        Location location = null;
+        try{
+            location = locationManager.getLastKnownLocation(locationProvider);
+        }catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        return location;
     }
 
     private static void requestLocationUpdates(LocationListener locationListener, LocationManager locationManager, String locationProvider) {
