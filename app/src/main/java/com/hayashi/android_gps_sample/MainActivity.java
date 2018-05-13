@@ -3,10 +3,13 @@ package com.hayashi.android_gps_sample;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
+
+    private LocationManager locationManager = null;
+    private String locationProvider = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     public void init() {
         requestPermissionIfNot(this);
+
+        // 位置情報を管理している LocationManager のインスタンスを生成
+        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        this.locationProvider = getLocationProvider(this, this.locationManager);
+    }
+
+    private static String getLocationProvider(Activity activity, LocationManager locationManager) {
+        String locationProvider = null;
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // GPSが利用可能になっている場合
+            locationProvider = LocationManager.GPS_PROVIDER;
+        } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            // GPSプロバイダーが有効になっていない場合は基地局情報が利用可能になっている場合
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        } else {
+            // いずれも利用可能でない場合は、GPSを設定する画面に遷移
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            activity.startActivity(settingsIntent);
+        }
+        return locationProvider;
     }
 
     public static void requestPermissionIfNot(Activity activity) {
